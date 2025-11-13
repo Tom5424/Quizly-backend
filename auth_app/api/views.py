@@ -1,8 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth.models import User
+from .authentication import CookieJWTAuthentication
 from .serializers import RegisterSerializer, UserInfoSerializer
 
 
@@ -46,4 +48,16 @@ class CookieTokenRefreshView(TokenRefreshView):
         access_token = serializer.validated_data.get("access")
         response = Response(data={"detail": "Token refreshed", "access": "new_access_token"})
         response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True, samesite="Lax")
+        return response
+
+
+class LogoutView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def post(self, request):
+        response = Response({"detail": "Log-Out successfully! All Tokens will be deleted. Refresh token is now invalid."}, status=status.HTTP_200_OK)
+        response.delete_cookie(key="access_token")
+        response.delete_cookie(key="refresh_token")
         return response
