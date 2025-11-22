@@ -1,5 +1,5 @@
 from django.db import models
-from utils import answer_choices
+from utils.choices import answer_choices
 
 
 class Quiz(models.Model):

@@ -1,8 +1,6 @@
-import json
 import yt_dlp
 
 
-URL = 'https://www.youtube.com/watch?v=BaW_jenozKc'
 ydl_opts = {
     "format": "bestaudio/best",
     "outtmpl": "media/downloads/%(title)s.%(ext)s",
@@ -11,7 +9,8 @@ ydl_opts = {
 }
 
 
-def get_video_info(url):
+def get_video_audio_path(url):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(URL, download=False)
-        print(json.dumps(ydl.sanitize_info(info)))
+        video_info = ydl.extract_info(url, download=True)
+        video_path = ydl.prepare_filename(video_info)
+        return video_path
