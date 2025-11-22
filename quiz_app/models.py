@@ -1,10 +1,9 @@
 from django.db import models
-from utils.choices import answer_choices
 
 
 class Quiz(models.Model):
     title = models.CharField(max_length=100) 
-    description = models.TextField(max_length=300)
+    description = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     video_url = models.URLField()
@@ -16,9 +15,9 @@ class Quiz(models.Model):
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
-    question_title = models.CharField(max_length=100)
-    question_options = models.CharField(max_length=25, choices=answer_choices)
-    answer = models.CharField(max_length=25) 
+    question_title = models.CharField(max_length=200)
+    question_options = models.JSONField()
+    answer = models.CharField(max_length=100) 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
