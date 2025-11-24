@@ -1,13 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError as DRFValidationError
-from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from auth_app.api.authentication import CookieJWTAuthentication
 from utils.task import create_quiz
-from .serializers import QuizSerializer
+from .serializers import QuizSerializer, UrlSerializer
 
 
 class CreateQuizView(APIView):
@@ -16,12 +13,9 @@ class CreateQuizView(APIView):
     
 
     def post(self, request):
-        video_url = request.data.get("url")
-        validator = URLValidator()
-        try:
-            validator(video_url)
-        except ValidationError:
-            raise DRFValidationError(detail={"url": "Invalid URL"})
+        url_serializer = UrlSerializer(data=request.data)
+        url_serializer.is_valid(raise_exception=True)
+        video_url = url_serializer.validated_data.get("url") 
         response = create_quiz(video_url)
         quiz_data = {
             "title": response.get("title", "No Titel"),
