@@ -4,14 +4,16 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
-# from rest_framework.permissions import IsAuthenticated
-# from .authentication import CookieJWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from auth_app.api.authentication import CookieJWTAuthentication
 from utils.task import create_quiz
 from .serializers import QuizSerializer
 
 
 class CreateQuizView(APIView):
-
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
 
     def post(self, request):
         video_url = request.data.get("url")
