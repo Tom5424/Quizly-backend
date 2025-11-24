@@ -23,7 +23,7 @@ class CreateQuizView(APIView):
             "video_url": video_url, 
             "questions": response.get("questions", [])
         }
-        serializer = QuizSerializer(data=quiz_data)
+        serializer = QuizSerializer(data=quiz_data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)

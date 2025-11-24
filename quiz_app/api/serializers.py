@@ -21,8 +21,9 @@ class QuizSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
+        request = self.context.get('request')
         questions_data = validated_data.pop('questions', [])
-        quiz = Quiz.objects.create(**validated_data)
+        quiz = Quiz.objects.create(owner=request.user, **validated_data)
         for question_data in questions_data:
             Question.objects.create(quiz=quiz, **question_data)
         return quiz
