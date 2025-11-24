@@ -5,9 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from auth_app.api.authentication import CookieJWTAuthentication
 from utils.task import create_quiz
 from .serializers import QuizSerializer, UrlSerializer
+from quiz_app.models import Quiz
 
 
-class CreateQuizView(APIView):
+class QuizListCreateView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -27,3 +28,14 @@ class CreateQuizView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    
+
+    def get(self, request):
+        quizzes = Quiz.objects.filter(owner=request.user)
+        serializer = QuizSerializer(quizzes, many=True)
+        data = serializer.data
+        for quizz in data:
+            for question in quizz.get("questions", []):
+                question.pop("created_at")
+                question.pop("updated_at")
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
