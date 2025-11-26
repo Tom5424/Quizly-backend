@@ -18,6 +18,8 @@ class QuizListCreateView(APIView):
         url_serializer.is_valid(raise_exception=True)
         video_url = url_serializer.validated_data.get("url") 
         response = create_quiz(video_url)
+        if response is None:
+            return Response(data={"error": "The video is too long. Only Videos with a duration of 5 minutes allowed."}, status=status.HTTP_400_BAD_REQUEST)
         quiz_data = {
             "title": response.get("title", "No Titel"),
             "description": response.get("description", ""),
