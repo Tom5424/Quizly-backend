@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import get_object_or_404
 from auth_app.api.authentication import CookieJWTAuthentication
 from utils.task import create_quiz
 from .serializers import QuizSerializer, UrlSerializer
@@ -41,3 +42,18 @@ class QuizListCreateView(APIView):
                 question.pop("created_at")
                 question.pop("updated_at")
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class QuizDetailView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request, id):
+        quiz = get_object_or_404(Quiz, id=id)
+        serializer = QuizSerializer(quiz)
+        data = serializer.data
+        for question in data.get("questions", []):
+                question.pop("created_at")
+                question.pop("updated_at")
+        return Response(data=data, status=status.HTTP_200_OK)
