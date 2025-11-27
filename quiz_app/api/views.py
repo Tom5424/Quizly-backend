@@ -6,6 +6,7 @@ from rest_framework.generics import get_object_or_404
 from auth_app.api.authentication import CookieJWTAuthentication
 from utils.task import create_quiz
 from .serializers import QuizSerializer, UrlSerializer
+from .permissions import IsOwner
 from quiz_app.models import Quiz
 
 
@@ -46,11 +47,12 @@ class QuizListCreateView(APIView):
 
 class QuizDetailView(APIView):
     authentication_classes = [CookieJWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
     def get(self, request, id):
         quiz = get_object_or_404(Quiz, id=id)
+        self.check_object_permissions(request, quiz)
         serializer = QuizSerializer(quiz)
         data = serializer.data
         for question in data.get("questions", []):
