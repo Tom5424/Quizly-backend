@@ -72,3 +72,10 @@ class QuizDetailView(APIView):
                 question.pop("created_at")
                 question.pop("updated_at")
         return Response(data=data, status=status.HTTP_200_OK)
+    
+
+    def delete(self, request, id):
+        quiz = get_object_or_404(Quiz, id=id)
+        self.check_object_permissions(request, quiz)
+        quiz.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
