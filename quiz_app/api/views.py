@@ -59,3 +59,16 @@ class QuizDetailView(APIView):
                 question.pop("created_at")
                 question.pop("updated_at")
         return Response(data=data, status=status.HTTP_200_OK)
+    
+
+    def patch(self, request, id):
+        quiz = get_object_or_404(Quiz, id=id)
+        self.check_object_permissions(request, quiz)
+        serializer = QuizSerializer(quiz, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()        
+        data = serializer.data
+        for question in data.get("questions", []):
+                question.pop("created_at")
+                question.pop("updated_at")
+        return Response(data=data, status=status.HTTP_200_OK)

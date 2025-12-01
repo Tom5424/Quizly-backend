@@ -20,13 +20,28 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "description", "created_at", "updated_at", "video_url", "questions"]
 
 
+    def validate(self, attrs):
+        allowed_fields = {"title", "description"}
+        for field in attrs: 
+            if field not in allowed_fields:
+                raise serializers.ValidationError(detail="Only the title and description are can be changed")
+        return attrs
+     
+
     def create(self, validated_data):
-        request = self.context.get('request')
-        questions_data = validated_data.pop('questions', [])
+        request = self.context.get("request")
+        questions_data = validated_data.pop("questions", [])
         quiz = Quiz.objects.create(owner=request.user, **validated_data)
         for question_data in questions_data:
             Question.objects.create(quiz=quiz, **question_data)
         return quiz
+    
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get("title", instance.title)
+        instance.description = validated_data.get("description", instance.description)
+        instance.save()
+        return instance
 
 
 class UrlSerializer(serializers.Serializer):
