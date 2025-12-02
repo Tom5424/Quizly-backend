@@ -28,10 +28,12 @@ class QuizSerializer(serializers.ModelSerializer):
         """Validate the provided attributes."""
 
 
+        request = self.context.get("request")
         allowed_fields = {"title", "description"}
-        for field in attrs: 
-            if field not in allowed_fields:
-                raise serializers.ValidationError(detail="Only the title and description are can be changed")
+        if request.method == "PATCH":
+            for field in attrs: 
+                if field not in allowed_fields:
+                    raise serializers.ValidationError(detail="Only the title and description are can be changed")
         return attrs
      
 

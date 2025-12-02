@@ -46,5 +46,5 @@ def clean_json_string(json_string):
 
 
     edit_json_string = re.sub(r'(?i)json', '', json_string)
-    edit_json_string = re.sub(r'```', '', json_string)
+    edit_json_string = re.sub(r'```', '', edit_json_string)
     return json.loads(edit_json_string)    
