@@ -9,9 +9,13 @@ from .serializers import RegisterSerializer, UserInfoSerializer
 
 
 class RegisterView(APIView):
+    """Handles to create a new user."""
 
 
     def post(self, request):
+        """Create a new user."""
+
+
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -19,9 +23,13 @@ class RegisterView(APIView):
     
 
 class CookieTokenObtainPairView(TokenObtainPairView):
+    """Custom view to login the user and set cookies."""
 
 
     def post(self, request, *args, **kwargs):
+        """Login the user and set access and refresh tokens in cookies."""
+
+
         response = super().post(request, *args, **kwargs)
         access_token = response.data.get("access")
         refresh_token = response.data.get("refresh")
@@ -34,9 +42,13 @@ class CookieTokenObtainPairView(TokenObtainPairView):
     
 
 class CookieTokenRefreshView(TokenRefreshView):
+    """Custom view to refresh the access token and set it to the cookies."""
 
 
     def post(self, request, *args, **kwargs):
+        """Refresh the access token and set it to the cookies."""
+
+
         refresh_token = request.COOKIES.get("refresh_token")
         if refresh_token is None:
             return Response(data={"detail": "Refresh token not found!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -52,11 +64,17 @@ class CookieTokenRefreshView(TokenRefreshView):
 
 
 class LogoutView(APIView):
+    """Handles the logout and delete the access and refresh token from the cookies."""
+
+
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
 
     def post(self, request):
+        """Logout the current user and delete the access and refresh token from the cookies."""
+
+
         response = Response({"detail": "Log-Out successfully! All Tokens will be deleted. Refresh token is now invalid."}, status=status.HTTP_200_OK)
         response.delete_cookie(key="access_token")
         response.delete_cookie(key="refresh_token")

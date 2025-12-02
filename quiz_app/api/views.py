@@ -11,11 +11,17 @@ from quiz_app.models import Quiz
 
 
 class QuizListCreateView(APIView):
+    """Handles listing and creating quizzes."""
+
+    
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
     
 
     def post(self, request):
+        """Create a new Quiz."""
+
+
         url_serializer = UrlSerializer(data=request.data)
         url_serializer.is_valid(raise_exception=True)
         video_url = url_serializer.validated_data.get("url") 
@@ -35,6 +41,9 @@ class QuizListCreateView(APIView):
     
 
     def get(self, request):
+        """Lists quizzes only from the owner."""
+
+
         quizzes = Quiz.objects.filter(owner=request.user)
         serializer = QuizSerializer(quizzes, many=True)
         data = serializer.data
@@ -46,11 +55,17 @@ class QuizListCreateView(APIView):
 
 
 class QuizDetailView(APIView):
+    """Handles retrieving, updating, and deleting a single quiz, onyl from the owner."""
+
+
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
 
 
     def get(self, request, id):
+        """Retrieving a single quiz only from the owner."""
+
+
         quiz = get_object_or_404(Quiz, id=id)
         self.check_object_permissions(request, quiz)
         serializer = QuizSerializer(quiz)
@@ -62,6 +77,9 @@ class QuizDetailView(APIView):
     
 
     def patch(self, request, id):
+        """Update a single quiz only from the owner."""
+
+
         quiz = get_object_or_404(Quiz, id=id)
         self.check_object_permissions(request, quiz)
         serializer = QuizSerializer(quiz, data=request.data, partial=True)
@@ -75,6 +93,9 @@ class QuizDetailView(APIView):
     
 
     def delete(self, request, id):
+        """Delete a single quiz only from the owner."""
+
+
         quiz = get_object_or_404(Quiz, id=id)
         self.check_object_permissions(request, quiz)
         quiz.delete()

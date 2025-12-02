@@ -4,6 +4,9 @@ import re
 
 
 def set_prompt(text):
+    """Generate the prompt and return it as json."""
+
+
     prompt = f"""
         Erstellen Sie anhand des folgenden Transkripts ein Quiz im gültigen JSON-Format. Entferne alle sonderzeichen wie ``` und json. 
 
@@ -39,6 +42,9 @@ def set_prompt(text):
 
 
 def clean_json_string(json_string):
+    """Clean the json from special characters."""
+
+
     edit_json_string = re.sub(r'(?i)json', '', json_string)
     edit_json_string = re.sub(r'```', '', json_string)
     return json.loads(edit_json_string)    

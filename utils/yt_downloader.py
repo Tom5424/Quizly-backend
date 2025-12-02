@@ -10,6 +10,9 @@ ydl_opts = {
 
 
 def get_video_audio_path(url):
+    """Extract infos from the given url and generate the output filename."""
+
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         video_info = ydl.extract_info(url, download=True)
         duration = video_info.get("duration", 0)
