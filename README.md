@@ -57,7 +57,7 @@ The quizzes will create with the gemini Ai.
   ```
 
 
-4 **Create .env data with credentials and paste credentials with your own values:**
+4 **Rename the .env.template file to .env and paste credentials with your own values:**
 
  ```
    GEMINI_API_KEY=your_api_key
