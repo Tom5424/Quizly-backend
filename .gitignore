@@ -2,3 +2,7 @@
 .env
 db.sqlite3
 /media
+/auth_app/__pycache__
+/core/__pycache__
+/quiz_app/__pycache__
+/utils/__pycache__ 
