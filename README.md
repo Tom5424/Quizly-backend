@@ -60,7 +60,7 @@ The quizzes will create with the gemini Ai.
 4 **Rename the .env.template file to .env and paste credentials with your own values:**
 
  ```
-   GEMINI_API_KEY=your_api_key
+  GEMINI_API_KEY=your_api_key
  ```
 
 
