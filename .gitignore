@@ -6,3 +6,7 @@ db.sqlite3
 /core/__pycache__
 /quiz_app/__pycache__
 /utils/__pycache__ 
+/auth_app/migrations/0001_initial.py
+/auth_app/migrations/0002_alter_question_answer_and_more.py
+/auth_app/migrations/0003_quiz_owner.py
+/auth_app/migrations/0004_alter_quiz_owner.py
