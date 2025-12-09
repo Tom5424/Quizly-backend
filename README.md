@@ -64,7 +64,17 @@ The quizzes will create with the gemini Ai.
  ```
 
 
-5 **Start the Project:**
+5 **Make the Database Migrations:**
+  ```
+  py manage.py makemigrations
+  ```
+
+  ```
+  py manage.py migrate
+  ```
+
+
+6 **Start the Project:**
   ```
   py manage.py runserver
   ```
